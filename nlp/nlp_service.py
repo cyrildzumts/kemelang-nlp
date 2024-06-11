@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.apps import apps
+from django.utils import timezone
 from nlp import constants as Constants
 import logging
+import datetime
 import csv, os
 
 
@@ -16,7 +18,7 @@ def add_definitions(writer, definitions):
 def generate_lang_csv(lang):
     try:
         langage = Constants.Langage.objects.get(slug=lang)
-        filename = f"datasets/{langage.slug}/{langage.slug}.csv"
+        filename = f"datasets/{langage.slug}/{langage.slug}-{timezone.datetime.isoformat("YYYY-MM-DD-HH-MM",sep="")}.csv"
         words = Constants.Word.objects.filter(langage=langage)
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
