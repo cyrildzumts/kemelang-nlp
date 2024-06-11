@@ -21,7 +21,7 @@ def generate_lang_csv(lang):
         os.mkdirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
             writer = csv.writer(f)
-            writer.writerow(settings[Constants.WORD_FIELDS_KEY])
+            writer.writerow(getattr(settings, Constants.WORD_FIELDS_KEY))
             ## generate headers
             for word in words:
                 writer.writerow(word.as_row())
