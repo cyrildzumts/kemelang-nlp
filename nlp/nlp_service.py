@@ -17,9 +17,8 @@ def add_definitions(writer, definitions):
 
 def generate_lang_csv(lang):
     try:
-        langage = Constants.Langage.objects.get(slug=lang)
-        filename = f"datasets/{langage.slug}/{langage.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
-        words = Constants.Word.objects.filter(langage=langage)
+        filename = f"datasets/{lang.slug}/{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+        words = Constants.Word.objects.filter(langage=lang)
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
             writer = csv.writer(f)
@@ -33,4 +32,12 @@ def generate_lang_csv(lang):
             logger.info(f"csv datasets for langage {lang} generated in file {filename}")
     except Exception as e:
         logger.error(f"Error while generating csv datasets for langage {lang}: {e}", e)
-    
+
+
+def generate_all_datasets():
+    try:
+        langages = Constants.Langage.objects.filter(is_active=True)
+        for lang in langages:
+            generate_lang_csv(lang)
+    except Exception as e:
+        logger.warning(f"Error while generating datasets csv files : {e}", e)
