@@ -8,8 +8,6 @@ import csv, os
 logger = logging.getLogger(__name__)
 
 
-
-
 def add_definitions(writer, definitions):
     for definition in definitions.all():
         writer.writerow(definition.as_row())
