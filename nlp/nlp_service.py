@@ -18,7 +18,7 @@ def generate_lang_csv(lang):
         langage = Constants.Langage.objects.get(slug=lang)
         filename = f"datasets/{langage.slug}/{langage.slug}.csv"
         words = Constants.Word.objects.filter(langage=langage)
-        os.mkdirs(os.path.dirname(filename), exist_ok=True)
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(getattr(settings, Constants.WORD_FIELDS_KEY))
