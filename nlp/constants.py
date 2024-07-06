@@ -13,3 +13,4 @@ REQUIRED_SETTINGS = [APP_NAME_KEY, LANG_MODEL_NAME_KEY, WORD_MODEL_NAME_KEY, DEF
 Langage = None
 Word = None
 Definition = None
+Phrase = None

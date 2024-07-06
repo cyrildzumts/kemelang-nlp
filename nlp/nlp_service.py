@@ -41,3 +41,11 @@ def generate_all_datasets():
             generate_lang_csv(lang)
     except Exception as e:
         logger.warning(f"Error while generating datasets csv files : {e}", e)
+        
+
+def generate_datasets_for_language(lang_set):
+    try:
+        for lang in lang_set:
+            generate_lang_csv(lang)
+    except Exception as e:
+        logger.warning(f"Error while generating datasets csv files : {e}", e)
