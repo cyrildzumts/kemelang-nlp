@@ -35,15 +35,16 @@ def generate_lang_csv(lang):
 
 
 def generate_lang_sentences_csv(lang):
+    current_datetime = timezone.datetime.now().isoformat(sep='-',timespec='seconds')
     try:
         sentences = Constants.Phrase.objects.filter(langage=lang)
         for sentence in sentences:
             translations = sentence.translations.all()
 
             for translation in translations:
-                filename = f"datasets/sentences/{lang.slug}/{lang.slug}-{translation.langage.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+                filename = f"datasets/sentences/{lang.slug}/{lang.slug}-{translation.langage.slug}-{current_datetime}.csv"
                 os.makedirs(os.path.dirname(filename), exist_ok=True)
-                with open(filename, 'w') as f:
+                with open(filename, 'a') as f:
                     writer = csv.writer(f, delimiter=";")
                     #writer.writerow(getattr(settings, Constants.PHRASE_FIELDS_KEY))
                     ## generate headers
