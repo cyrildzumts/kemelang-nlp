@@ -17,7 +17,7 @@ def add_definitions(writer, definitions):
 
 def generate_lang_csv(lang):
     try:
-        filename = f"datasets/{lang.slug}/{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+        filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
         words = Constants.Word.objects.filter(langage=lang)
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
