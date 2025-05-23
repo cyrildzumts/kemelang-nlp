@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def add_definitions(writer, definitions):
-    for definition in definitions.all():
+    for definition in definitions.annotate(unaccent=F('word__word__unaccent')):
         writer.writerow(definition.as_row())
 
 
