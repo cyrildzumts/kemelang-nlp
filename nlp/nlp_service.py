@@ -46,13 +46,13 @@ def create_zipfile(file_path_list, archive_name):
     return True
 
 
-def get_archive_path(archive_name):
+def get_archive(archive_name):
     file_path = f"datasets/archives/{Constants.ARCHIVE_PREFIX}-{archive_name}.zip"
     path = pathlib.Path(file_path)
     if not path.exists():
             return None
     
-    return file_path, path
+    return file_path
 
 def generate_lang_csv(lang):
     try:
