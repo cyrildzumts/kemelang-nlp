@@ -38,7 +38,7 @@ def create_zipfile(file_path_list, archive_name):
     
     try:
         base_dir = "datasets/archives"
-        basename = f"{Constants.ARCHIVE_PREFIX}-{archive_name}"
+        basename = f"{Constants.ARCHIVE_PREFIX}-{archive_name.lower()}"
         os.makedirs(base_dir, exist_ok=True)
 
         with zipfile.ZipFile(f"{base_dir}/{basename}.zip", 'w') as file:
@@ -52,7 +52,9 @@ def create_zipfile(file_path_list, archive_name):
 
 
 def get_archive(archive_name):
-    file_path = f"datasets/archives/{Constants.ARCHIVE_PREFIX}-{archive_name}.zip"
+    if not archive_name:
+        return None
+    file_path = f"datasets/archives/{Constants.ARCHIVE_PREFIX}-{archive_name.lower()}.zip"
     path = pathlib.Path(file_path)
     if not path.exists():
             return None
