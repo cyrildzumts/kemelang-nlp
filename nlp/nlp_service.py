@@ -37,7 +37,9 @@ def create_zipfile(file_path_list, archive_name):
         return None
     
     try:
-        with zipfile.ZipFile(f"datasets/archives/{Constants.ARCHIVE_PREFIX}-{archive_name}.zip", 'w') as file:
+        base_dir = "datasets/archives"
+        os.makedirs(base_dir, exist_ok=True)
+        with zipfile.ZipFile(f"{base_dir}/{Constants.ARCHIVE_PREFIX}-{archive_name}.zip", 'w') as file:
             for path in file_path_list:
                 file.write(path)
     except Exception as e:
