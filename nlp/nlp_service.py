@@ -44,6 +44,7 @@ def create_zipfile(file_path_list, archive_name):
         with zipfile.ZipFile(f"{base_dir}/{basename}.zip", 'w') as file:
             for path in file_path_list:
                 file.write(path, os.path.basename(path))
+                
     except Exception as e:
         logger.error(f"Error when creating archive for dataset : {archive_name} : {e}")
     
