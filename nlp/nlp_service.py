@@ -38,10 +38,12 @@ def create_zipfile(file_path_list, archive_name):
     
     try:
         base_dir = "datasets/archives"
+        basename = f"{Constants.ARCHIVE_PREFIX}-{archive_name}"
         os.makedirs(base_dir, exist_ok=True)
-        with zipfile.ZipFile(f"{base_dir}/{Constants.ARCHIVE_PREFIX}-{archive_name}.zip", 'w') as file:
+
+        with zipfile.ZipFile(f"{base_dir}/{basename}.zip", 'w') as file:
             for path in file_path_list:
-                file.write(path)
+                file.write(path, basename)
     except Exception as e:
         logger.error(f"Error when creating archive for dataset : {archive_name} : {e}")
     
