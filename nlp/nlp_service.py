@@ -64,7 +64,7 @@ def get_archive(archive_name):
 def generate_lang_csv(lang):
     try:
         filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
-        words = Constants.Word.objects.filter(langage=lang).annotate(unaccent=F('word__unaccent'))
+        words = Constants.Word.objects.filter(langage=lang).annotate(unaccent=F('word__unaccent')).order_by('word')
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
