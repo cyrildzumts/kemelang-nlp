@@ -90,7 +90,7 @@ def generate_lang_word_list_csv(lang):
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
-            writer = csv.writer(f, delimiter=";")
+            writer = csv.writer(f)
             #writer.writerow(getattr(settings, Constants.WORD_FIELDS_KEY))
             ## generate headers
             for word in words:
