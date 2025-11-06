@@ -83,6 +83,26 @@ def generate_lang_csv(lang):
         logger.error(f"Error while generating csv datasets for langage {lang}: {e}", e)
 
 
+def generate_lang_word_list_csv(lang):
+    try:
+        filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-word-list-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+        words = Constants.Word.objects.filter(langage=lang).order_by('word')
+        dir_name = os.path.dirname(filename)
+        os.makedirs(dir_name, exist_ok=True)
+        with open(filename, 'w') as f:
+            writer = csv.writer(f, delimiter=";")
+            #writer.writerow(getattr(settings, Constants.WORD_FIELDS_KEY))
+            ## generate headers
+            for word in words:
+                writer.writerow(word.word)
+
+            logger.info(f"csv word list for langage {lang} generated in file {filename}")
+        create_zipfile([filename], f"{lang.slug}-word-list")
+        
+    except Exception as e:
+        logger.error(f"Error while generating csv word list for langage {lang}: {e}", e)
+
+
 def generate_lang_sentences_csv(lang):
     current_datetime = timezone.datetime.now().isoformat(sep='-',timespec='seconds')
     try:
@@ -109,6 +129,7 @@ def generate_all_datasets():
         langages = Constants.Langage.objects.filter(is_active=True)
         for lang in langages:
             generate_lang_csv(lang)
+            generate_lang_word_list_csv(lang)
             generate_lang_sentences_csv(lang)
     except Exception as e:
         logger.warning(f"Error while generating datasets csv files : {e}", e)
@@ -118,6 +139,7 @@ def generate_datasets_for_language(lang_set):
     try:
         for lang in lang_set:
             generate_lang_csv(lang)
+            generate_lang_word_list_csv(lang)
             generate_lang_sentences_csv(lang)
     except Exception as e:
         logger.warning(f"Error while generating datasets csv files : {e}", e)
