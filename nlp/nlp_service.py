@@ -90,11 +90,11 @@ def generate_lang_word_list_csv(lang):
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
-            writer = csv.writer(f, delimiter="")
+            writer = csv.writer(f, delimiter="\n")
             #writer.writerow(getattr(settings, Constants.WORD_FIELDS_KEY))
             ## generate headers
             for word in words:
-                writer.writerow(word.word)
+                writer.writerow([word.word])
 
             logger.info(f"csv word list for langage {lang} generated in file {filename}")
         create_zipfile([filename], f"{lang.slug}-word-list")
