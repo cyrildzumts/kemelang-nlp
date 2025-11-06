@@ -85,7 +85,7 @@ def generate_lang_csv(lang):
 
 def generate_lang_word_list_csv(lang):
     try:
-        filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-word-list-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+        filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-word-list-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.txt"
         words = Constants.Word.objects.filter(langage=lang).order_by('word')
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
