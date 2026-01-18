@@ -128,12 +128,12 @@ def generate_lang_sentences_csv(lang):
 
 def generate_lang_list():
     try:
-        filename = f"datasets/language/languages-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+        filename = f"datasets/languages/languages-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
         queryset = Constants.Langage.objects.filter(is_active=True)
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
-            writer = csv.writer(f, delimiter="\n")
+            writer = csv.writer(f, delimiter=";")
             writer.writerow(getattr(settings, Constants.LANG_CODES_FIELDS))
             ## generate headers
             for lang in queryset:
