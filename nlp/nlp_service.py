@@ -115,7 +115,7 @@ def generate_word_grouped_data(words):
     
     for key in grouped_data:
         
-        grouped_data[key]["contexts"] = "|".join(sorted(grouped_data[key]["contexts"]))
+        grouped_data[key]["contexts"] = "|".join(sorted(list(grouped_data[key]["contexts"])))
 
         grouped_data[key]["definitions"] = "|".join(sorted(grouped_data[key]["definitions"]))
 
@@ -145,12 +145,7 @@ def generate_kle_lang_csv(lang):
             writer = csv.DictWriter(f, delimiter=";", fieldnames= entry.keys())
             writer.writeheader()
             writer.writerows(word_list)
-            
-            ## generate headers
-            #for word in words:
-            #    writer.writerow(word.as_row())
-            #    if word.definitions:
-            #        add_definitions(writer, word.definitions)
+
 
             logger.info(f"KLE - csv datasets for langage {lang} generated in file {filename} - size {size} entries")
         create_zipfile([filename], lang.slug)
