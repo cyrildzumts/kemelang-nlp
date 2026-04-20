@@ -114,8 +114,8 @@ def generate_word_grouped_data(words):
             grouped_data[key]["contexts"].add(entry['context'])
     
     for key in grouped_data:
-        grouped_data[key]["contexts"] = json.dumps(grouped_data[key]["contexts"])
-        grouped_data[key]["definitions"] = json.dumps(grouped_data[key]["definitions"])
+        grouped_data[key]["contexts"] = json.dumps(list(grouped_data[key]["contexts"]))
+        grouped_data[key]["definitions"] = json.dumps(list(grouped_data[key]["definitions"]))
     
     logger.info(f"Grouped data size : {count} entries")
     return grouped_data
