@@ -122,10 +122,11 @@ def generate_kle_lang_csv(lang):
         definitions = Constants.Definition.objects.filter(word__langage=lang).annotate(unaccent=F('word__word__unaccent'))
         dir_name = os.path.dirname(filename)
         if not words.exists():
+            logger.warning(f"KLE - No words found for langage {lang}")
             return
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
-        word = words.objects.first()
+        word = words.first()
         os.makedirs(dir_name, exist_ok=True)
         
         with open(filename, 'w') as f:
