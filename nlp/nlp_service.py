@@ -88,7 +88,9 @@ def generate_lang_csv(lang):
 
 def generate_word_grouped_data(words):
     grouped_data = {}
+    count = 0
     for word in words:
+        count += 1
         entry = word.as_kle_dict()
         key =(entry['word'], entry['type'])
         if key not in grouped_data:
@@ -110,8 +112,8 @@ def generate_word_grouped_data(words):
         grouped_data[key]["definitions"].append(entry['definition'])
         if entry.get('context'):
             grouped_data[key]["contexts"].update(entry['context'])
-        
-        return grouped_data
+    logger.info(f"Grouped data size : {count} entries")
+    return grouped_data
         
             
 
