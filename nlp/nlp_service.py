@@ -7,7 +7,7 @@ import shutil
 import zipfile
 import logging
 import datetime
-import csv, os, pathlib
+import csv, os, pathlib, json
 
 
 logger = logging.getLogger(__name__)
@@ -112,6 +112,11 @@ def generate_word_grouped_data(words):
         grouped_data[key]["definitions"].append(entry['definition'])
         if entry.get('context'):
             grouped_data[key]["contexts"].add(entry['context'])
+    
+    for key in grouped_data:
+        grouped_data[key]["contexts"] = list(grouped_data[key]["contexts"])
+        grouped_data[key]["definitions"] = list(grouped_data[key]["definitions"])
+    
     logger.info(f"Grouped data size : {count} entries")
     return grouped_data
         
@@ -128,7 +133,7 @@ def generate_kle_lang_csv(lang):
             return
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
-        word_list = list(grouped_data.values())
+        word_list = list(grouped_data.values(), ensure_ascii=False)
         size = len(word_list)
         
         entry = word_list[0]
