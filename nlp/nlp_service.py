@@ -127,6 +127,8 @@ def generate_kle_lang_csv(lang):
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
         word_list = list(grouped_data.values())
+        size = len(word_list)
+        
         entry = word_list[0]
         os.makedirs(dir_name, exist_ok=True)
         
@@ -141,7 +143,7 @@ def generate_kle_lang_csv(lang):
             #    if word.definitions:
             #        add_definitions(writer, word.definitions)
 
-            logger.info(f"KLE - csv datasets for langage {lang} generated in file {filename}")
+            logger.info(f"KLE - csv datasets for langage {lang} generated in file {filename} - size {size} entries")
         create_zipfile([filename], lang.slug)
         
     except Exception as e:
