@@ -133,7 +133,7 @@ def generate_kle_lang_csv(lang):
             return
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
-        word_list = list(grouped_data.values(), ensure_ascii=False)
+        word_list = list(grouped_data.values())
         size = len(word_list)
         
         entry = word_list[0]
