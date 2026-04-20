@@ -126,13 +126,14 @@ def generate_kle_lang_csv(lang):
             return
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
-        word = words.first()
+        word_list = grouped_data.values()
+        entry = word_list[0]
         os.makedirs(dir_name, exist_ok=True)
         
         with open(filename, 'w') as f:
-            writer = csv.DictWriter(f, delimiter=";", fieldnames= word.as_kle_dict().keys())
+            writer = csv.DictWriter(f, delimiter=";", fieldnames= entry.keys())
             writer.writeheader()
-            writer.writerows(grouped_data.values())
+            writer.writerows(word_list)
             
             ## generate headers
             #for word in words:
