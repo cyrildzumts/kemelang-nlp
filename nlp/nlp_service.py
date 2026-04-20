@@ -81,6 +81,69 @@ def generate_lang_csv(lang):
         
     except Exception as e:
         logger.error(f"Error while generating csv datasets for langage {lang}: {e}", e)
+        
+
+
+
+
+def generate_word_grouped_data(words):
+    grouped_data = {}
+    for word in words:
+        entry = word.as_kle_dict()
+        key =(entry['word'], entry['type'])
+        if key not in grouped_data:
+            grouped_data[key] = {
+                "word": entry['word'],
+                "unaccent": entry['unaccent'],
+                "definitions": [],
+                "type": entry['type'],
+                "verb_type": entry['verb_type'],
+                "adverb_type": entry['adverb_type'],
+                "contexts": set(),
+                "plural": entry['plural'],
+                "prefix_class": entry['prefix_class'],
+                "class": entry['class'],
+                "transliteration": entry['transliteration'],
+                "audio": entry['audio'],
+            }
+            
+        grouped_data[key]["definitions"].append(entry['definition'])
+        if entry.get('context'):
+            grouped_data[key]["contexts"].update(entry['context'])
+        
+        return grouped_data
+        
+            
+
+def generate_kle_lang_csv(lang):
+    try:
+        filename = f"datasets/vocabularies/{lang.slug}/kle-{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
+        words = Constants.Word.objects.filter(langage=lang).annotate(unaccent=F('word__unaccent')).order_by('word')
+        definitions = Constants.Definition.objects.filter(word__langage=lang).annotate(unaccent=F('word__word__unaccent'))
+        dir_name = os.path.dirname(filename)
+        if not words.exists():
+            return
+        word_list = list(words) + list(definitions)
+        grouped_data = generate_word_grouped_data(word_list)
+        word = words.objects.first()
+        os.makedirs(dir_name, exist_ok=True)
+        
+        with open(filename, 'w') as f:
+            writer = csv.DictWriter(f, delimiter=";", fieldnames= word.as_kle_dict().keys())
+            writer.writeheader()
+            writer.writerows(grouped_data.values())
+            
+            ## generate headers
+            #for word in words:
+            #    writer.writerow(word.as_row())
+            #    if word.definitions:
+            #        add_definitions(writer, word.definitions)
+
+            logger.info(f"KLE - csv datasets for langage {lang} generated in file {filename}")
+        create_zipfile([filename], lang.slug)
+        
+    except Exception as e:
+        logger.error(f"KLE - Error while generating csv datasets for langage {lang}: {e}", e)
 
 
 def generate_lang_word_list_csv(lang):
@@ -149,6 +212,7 @@ def generate_all_datasets():
     try:
         langages = Constants.Langage.objects.filter(is_active=True)
         for lang in langages:
+            generate_kle_lang_csv(lang)
             generate_lang_csv(lang)
             generate_lang_word_list_csv(lang)
             generate_lang_sentences_csv(lang)
@@ -159,6 +223,7 @@ def generate_all_datasets():
 def generate_datasets_for_language(lang_set):
     try:
         for lang in lang_set:
+            generate_kle_lang_csv(lang)
             generate_lang_csv(lang)
             generate_lang_word_list_csv(lang)
             generate_lang_sentences_csv(lang)
