@@ -126,7 +126,7 @@ def generate_kle_lang_csv(lang):
             return
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
-        word_list = grouped_data.values()
+        word_list = list(grouped_data.values())
         entry = word_list[0]
         os.makedirs(dir_name, exist_ok=True)
         
