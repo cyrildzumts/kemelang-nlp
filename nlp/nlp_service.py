@@ -115,9 +115,9 @@ def generate_word_grouped_data(words):
     
     for key in grouped_data:
         
-        grouped_data[key]["contexts"] = ",".join(sorted(grouped_data[key]["contexts"]))
+        grouped_data[key]["contexts"] = "|".join(sorted(grouped_data[key]["contexts"]))
 
-        grouped_data[key]["definitions"] = ",".join(sorted(grouped_data[key]["definitions"]))
+        grouped_data[key]["definitions"] = "|".join(sorted(grouped_data[key]["definitions"]))
 
     
     return grouped_data
