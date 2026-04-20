@@ -111,7 +111,7 @@ def generate_word_grouped_data(words):
             
         grouped_data[key]["definitions"].append(entry['definition'])
         if entry.get('context'):
-            grouped_data[key]["contexts"].add(entry['context'])
+            grouped_data[key]["contexts"].update(entry['context'].split(','))
     
     for key in grouped_data:
         
