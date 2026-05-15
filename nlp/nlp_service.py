@@ -92,13 +92,13 @@ def generate_word_grouped_data(words):
     for word in words:
         count += 1
         entry = word.as_kle_dict()
-        key =(entry['word'], entry['type'])
+        key =(entry['word'], entry['category'])
         if key not in grouped_data:
             grouped_data[key] = {
                 "word": entry['word'],
                 "unaccent": entry['unaccent'],
                 "definitions": [],
-                "type": entry['type'],
+                "category": entry['category'],
                 "verb_type": entry['verb_type'],
                 "adverb_type": entry['adverb_type'],
                 "contexts": set(),
