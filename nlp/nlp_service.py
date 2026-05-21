@@ -109,9 +109,9 @@ def generate_word_grouped_data(words):
                 "audio": entry['audio'],
             }
             
-        grouped_data[key]["definitions"].append(entry['definition'])
-        if entry.get('context'):
-            grouped_data[key]["contexts"].update(entry['context'].split(','))
+        grouped_data[key]["definitions"].append(entry['definitions'])
+        if entry.get('contexts'):
+            grouped_data[key]["contexts"].update(entry['contexts'].split(','))
     
     for key in grouped_data:
         
