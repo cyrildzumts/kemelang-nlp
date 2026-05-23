@@ -97,6 +97,7 @@ def generate_word_grouped_data(words):
             grouped_data[key] = {
                 "word": entry['word'],
                 "unaccent": entry['unaccent'],
+                "word_to_latin": entry['word_to_latin'],
                 "definitions": [],
                 "category": entry['category'],
                 "verb_type": entry['verb_type'],
