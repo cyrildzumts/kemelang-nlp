@@ -108,7 +108,9 @@ def generate_word_grouped_data(words):
                 "class": entry['class'],
                 "transliteration": entry['transliteration'],
                 "audio": entry['audio'],
-                'word_uuid': entry['word_uuid']
+                'word_uuid': entry['word_uuid'],
+                'url': entry['url'],
+                'language': entry['language']
             }
             
         grouped_data[key]["definitions"].append(entry['definitions'])
