@@ -189,7 +189,7 @@ def generate_kle_sentences_csv(lang):
         sentence_sample = first_sentence.as_kle_dict()
         sentence_sample['translation'] = "A"
         fieldnames = list(sentence_sample.keys())
-        headers = Constants.SENTENCES_TRANSLATION_FIELDS_KEY
+        headers = getattr(settings, Constants.SENTENCES_TRANSLATION_FIELDS_KEY) 
         translation_data = {
             
         }
