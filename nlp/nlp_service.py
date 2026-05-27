@@ -178,10 +178,58 @@ def generate_lang_word_list_csv(lang):
         logger.error(f"Error while generating csv word list for langage {lang}: {e}", e)
 
 
+def generate_kle_sentences_csv(lang):
+    current_datetime = timezone.datetime.now().isoformat(sep='-',timespec='seconds')
+    try:
+        sentences = Constants.Phrase.objects.filter(langage=lang).annotate(unaccent=F('content__unaccent'))
+        first_sentence = sentences.first()
+        if not first_sentence:
+            logger.warning(f"No sentences found for langage {lang}")
+            return
+        sentence_sample = first_sentence.as_kle_dict()
+        sentence_sample['translation'] = "A"
+        fieldnames = list(sentence_sample.keys())
+        translation_data = {
+            
+        }
+        for sentence in sentences:
+            translations = sentence.translations.all()
+            sentence_dict = sentence.as_kle_dict()
+            for translation in translations:
+                #translation_data[translation.langage.slug] = translation
+                translation_list = translation_data.get(translation.langage.slug)
+                if not translation_list:
+                    translation_list = []
+                    translation_data[translation.langage.slug] = translation_list
+                sentence_dict['translation'] = translation.content
+                translation_list.append(sentence_dict.copy())    
+
+        for k, v in translation_data.items():
+            filename = f"datasets/sentences/{lang.slug}/kle-{lang.slug}-{k}-{current_datetime}.csv"
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            with open(filename, 'w') as f:
+                writer = csv.DictWriter(f, delimiter=";", fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(v)
+
+                #writer.writerow(getattr(settings, Constants.PHRASE_FIELDS_KEY))
+                ## generate headers
+                #writer.writerow([sentence.content, sentence.unaccent, translation.content])
+                logger.info(f"csv sentences datasets for langages {lang.slug}-{k} generated in file {filename}")
+
+    except Exception as e:
+        logger.error(f"Error while generating csv sentences datasets for langage {lang}: {e}", e)
+
+
+
 def generate_lang_sentences_csv(lang):
     current_datetime = timezone.datetime.now().isoformat(sep='-',timespec='seconds')
     try:
         sentences = Constants.Phrase.objects.filter(langage=lang).annotate(unaccent=F('content__unaccent'))
+        first_sentence = sentences.first()
+        if not first_sentence:
+            logger.warning(f"No sentences found for langage {lang}")
+            return
         for sentence in sentences:
             translations = sentence.translations.all()
 
@@ -228,6 +276,7 @@ def generate_all_datasets():
             generate_lang_csv(lang)
             generate_lang_word_list_csv(lang)
             generate_lang_sentences_csv(lang)
+            generate_kle_sentences_csv(lang)
     except Exception as e:
         logger.warning(f"Error while generating datasets csv files : {e}", e)
         
