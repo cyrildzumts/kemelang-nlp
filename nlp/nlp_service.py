@@ -186,9 +186,7 @@ def generate_kle_sentences_csv(lang):
         if not first_sentence:
             logger.warning(f"No sentences found for langage {lang}")
             return
-        sentence_sample = first_sentence.as_kle_dict()
-        sentence_sample['translation'] = "A"
-        fieldnames = list(sentence_sample.keys())
+        
         translation_data = {
             
         }
@@ -208,14 +206,14 @@ def generate_kle_sentences_csv(lang):
             filename = f"datasets/sentences/{lang.slug}/kle-{lang.slug}-{k}-{current_datetime}.csv"
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             with open(filename, 'w') as f:
-                writer = csv.DictWriter(f, delimiter=";", fieldnames=fieldnames)
+                writer = csv.DictWriter(f, delimiter=";", fieldnames=Constants.SENTENCES_TRANSLATION_FIELDS_KEY)
                 writer.writeheader()
                 writer.writerows(v)
 
                 #writer.writerow(getattr(settings, Constants.PHRASE_FIELDS_KEY))
                 ## generate headers
                 #writer.writerow([sentence.content, sentence.unaccent, translation.content])
-                logger.info(f"csv sentences datasets for langages {lang.slug}-{k} generated in file {filename}")
+                logger.info(f"KLE - csv sentences datasets for langages {lang.slug}-{k} generated in file {filename}")
 
     except Exception as e:
         logger.error(f"Error while generating csv sentences datasets for langage {lang}: {e}", e)
