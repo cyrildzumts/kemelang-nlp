@@ -64,7 +64,7 @@ def get_archive(archive_name):
 def generate_lang_csv(lang):
     try:
         filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
-        words = Constants.Word.objects.filter(langage=lang).annotate(unaccent=F('word__unaccent')).order_by('word')
+        words = Constants.Word.objects.filter(language=lang).annotate(unaccent=F('word__unaccent')).order_by('word')
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
@@ -76,11 +76,11 @@ def generate_lang_csv(lang):
                 if word.definitions:
                     add_definitions(writer, word.definitions)
 
-            logger.info(f"csv datasets for langage {lang} generated in file {filename}")
+            logger.info(f"csv datasets for language {lang} generated in file {filename}")
         create_zipfile([filename], lang.slug)
         
     except Exception as e:
-        logger.error(f"Error while generating csv datasets for langage {lang}: {e}", e)
+        logger.error(f"Error while generating csv datasets for language {lang}: {e}", e)
         
 
 
@@ -131,11 +131,11 @@ def generate_word_grouped_data(words):
 def generate_kle_lang_csv(lang):
     try:
         filename = f"datasets/vocabularies/{lang.slug}/kle-{lang.slug}-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
-        words = Constants.Word.objects.filter(langage=lang).annotate(unaccent=F('word__unaccent')).order_by('word')
-        definitions = Constants.Definition.objects.filter(word__langage=lang).annotate(unaccent=F('word__word__unaccent'))
+        words = Constants.Word.objects.filter(language=lang).annotate(unaccent=F('word__unaccent')).order_by('word')
+        definitions = Constants.Definition.objects.filter(word__language=lang).annotate(unaccent=F('word__word__unaccent'))
         dir_name = os.path.dirname(filename)
         if not words.exists():
-            logger.warning(f"KLE - No words found for langage {lang}")
+            logger.warning(f"KLE - No words found for language {lang}")
             return
         word_list = list(words) + list(definitions)
         grouped_data = generate_word_grouped_data(word_list)
@@ -151,17 +151,17 @@ def generate_kle_lang_csv(lang):
             writer.writerows(word_list)
 
 
-            logger.info(f"KLE - csv datasets for langage {lang} generated in file {filename} - size {size} entries")
+            logger.info(f"KLE - csv datasets for language {lang} generated in file {filename} - size {size} entries")
         create_zipfile([filename], lang.slug)
         
     except Exception as e:
-        logger.error(f"KLE - Error while generating csv datasets for langage {lang}: {e}", e)
+        logger.error(f"KLE - Error while generating csv datasets for language {lang}: {e}", e)
 
 
 def generate_lang_word_list_csv(lang):
     try:
         filename = f"datasets/vocabularies/{lang.slug}/{lang.slug}-word-list-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.txt"
-        words = Constants.Word.objects.filter(langage=lang).order_by('word')
+        words = Constants.Word.objects.filter(language=lang).order_by('word')
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
@@ -171,20 +171,20 @@ def generate_lang_word_list_csv(lang):
             for word in words:
                 writer.writerow([word.word])
 
-            logger.info(f"csv word list for langage {lang} generated in file {filename}")
+            logger.info(f"csv word list for language {lang} generated in file {filename}")
         create_zipfile([filename], f"{lang.slug}-word-list")
         
     except Exception as e:
-        logger.error(f"Error while generating csv word list for langage {lang}: {e}", e)
+        logger.error(f"Error while generating csv word list for language {lang}: {e}", e)
 
 
 def generate_kle_sentences_csv(lang):
     current_datetime = timezone.datetime.now().isoformat(sep='-',timespec='seconds')
     try:
-        sentences = Constants.Phrase.objects.filter(langage=lang).annotate(unaccent=F('content__unaccent'))
+        sentences = Constants.Phrase.objects.filter(language=lang).annotate(unaccent=F('content__unaccent'))
         first_sentence = sentences.first()
         if not first_sentence:
-            logger.warning(f"No sentences found for langage {lang}")
+            logger.warning(f"No sentences found for language {lang}")
             return
         sentence_sample = first_sentence.as_kle_dict()
         sentence_sample['translation'] = "A"
@@ -197,11 +197,11 @@ def generate_kle_sentences_csv(lang):
             translations = sentence.translations.all()
             sentence_dict = sentence.as_kle_dict()
             for translation in translations:
-                #translation_data[translation.langage.slug] = translation
-                translation_list = translation_data.get(translation.langage.slug)
+                #translation_data[translation.language.slug] = translation
+                translation_list = translation_data.get(translation.language.slug)
                 if not translation_list:
                     translation_list = []
-                    translation_data[translation.langage.slug] = translation_list
+                    translation_data[translation.language.slug] = translation_list
                 sentence_dict['translation'] = translation.content
                 translation_list.append(sentence_dict.copy())    
 
@@ -216,36 +216,36 @@ def generate_kle_sentences_csv(lang):
                 #writer.writerow(getattr(settings, Constants.PHRASE_FIELDS_KEY))
                 ## generate headers
                 #writer.writerow([sentence.content, sentence.unaccent, translation.content])
-                logger.info(f"csv sentences datasets for langages {lang.slug}-{k} generated in file {filename}")
+                logger.info(f"csv sentences datasets for languages {lang.slug}-{k} generated in file {filename}")
 
     except Exception as e:
-        logger.error(f"Error while generating csv sentences datasets for langage {lang}: {e} - fieldnames {fieldnames} - headers {headers}", e)
+        logger.error(f"Error while generating csv sentences datasets for language {lang}: {e} - fieldnames {fieldnames} - headers {headers}", e)
 
 
 
 def generate_lang_sentences_csv(lang):
     current_datetime = timezone.datetime.now().isoformat(sep='-',timespec='seconds')
     try:
-        sentences = Constants.Phrase.objects.filter(langage=lang).annotate(unaccent=F('content__unaccent'))
+        sentences = Constants.Phrase.objects.filter(language=lang).annotate(unaccent=F('content__unaccent'))
         first_sentence = sentences.first()
         if not first_sentence:
-            logger.warning(f"No sentences found for langage {lang}")
+            logger.warning(f"No sentences found for language {lang}")
             return
         for sentence in sentences:
             translations = sentence.translations.all()
 
             for translation in translations:
-                filename = f"datasets/sentences/{lang.slug}/{lang.slug}-{translation.langage.slug}-{current_datetime}.csv"
+                filename = f"datasets/sentences/{lang.slug}/{lang.slug}-{translation.language.slug}-{current_datetime}.csv"
                 os.makedirs(os.path.dirname(filename), exist_ok=True)
                 with open(filename, 'a') as f:
                     writer = csv.writer(f, delimiter=";")
                     #writer.writerow(getattr(settings, Constants.PHRASE_FIELDS_KEY))
                     ## generate headers
                     writer.writerow([sentence.content, sentence.unaccent, translation.content])
-                    logger.info(f"csv sentences datasets for langages {lang.slug}-{translation.langage.slug} generated in file {filename}")
+                    logger.info(f"csv sentences datasets for languages {lang.slug}-{translation.language.slug} generated in file {filename}")
 
     except Exception as e:
-        logger.error(f"Error while generating csv sentences datasets for langage {lang}: {e}", e)
+        logger.error(f"Error while generating csv sentences datasets for language {lang}: {e}", e)
 
 
 
@@ -253,7 +253,7 @@ def generate_lang_sentences_csv(lang):
 def generate_lang_list():
     try:
         filename = f"datasets/languages/languages-{timezone.datetime.now().isoformat(sep='-',timespec='seconds')}.csv"
-        queryset = Constants.Langage.objects.filter(is_active=True).exclude(code=None)
+        queryset = Constants.Language.objects.filter(is_active=True).exclude(code=None)
         dir_name = os.path.dirname(filename)
         os.makedirs(dir_name, exist_ok=True)
         with open(filename, 'w') as f:
@@ -263,16 +263,16 @@ def generate_lang_list():
             for lang in queryset:
                 writer.writerow([lang.name, lang.code])
 
-            logger.info(f"csv list for langage codes generated in file {filename}")
+            logger.info(f"csv list for language codes generated in file {filename}")
         
     except Exception as e:
-        logger.error(f"Error while generating csv word list for langage {lang}: {e}", e)
+        logger.error(f"Error while generating csv word list for language {lang}: {e}", e)
 
 
 def generate_all_datasets():
     try:
-        langages = Constants.Langage.objects.filter(is_active=True)
-        for lang in langages:
+        languages = Constants.Language.objects.filter(is_active=True)
+        for lang in languages:
             generate_kle_lang_csv(lang)
             generate_lang_csv(lang)
             generate_lang_word_list_csv(lang)
